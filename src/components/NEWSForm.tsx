@@ -14,9 +14,9 @@ function NEWSform() {
 	}
 
 	function checkIfValuesAreInRange(temp: string, heart: string, resp: string) {
-		const tempScore = parseFloat(temp.replace(",", ".") || "0");
-		const heartScore = parseFloat(heart.replace(",", ".") || "0");
-		const respScore = parseFloat(resp.replace(",", ".") || "0");
+		const tempScore = parseFloat(temp.replace(",", "."));
+		const heartScore = parseFloat(heart.replace(",", "."));
+		const respScore = parseFloat(resp.replace(",", "."));
 		let tempMessage = "";
 		let heartMessage = "";
 		let respMessage = "";
