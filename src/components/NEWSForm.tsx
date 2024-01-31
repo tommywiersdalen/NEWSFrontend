@@ -4,17 +4,19 @@ function NEWSform() {
 	const [temp, setTemp] = useState("");
 	const [heart, setHeart] = useState("");
 	const [resp, setResp] = useState("");
+	const [score, setScore] = useState("");
 
 	function resetForm() {
 		setTemp("");
 		setHeart("");
 		setResp("");
+		setScore("");
 	}
 
 	function checkIfValuesAreInRange(temp: string, heart: string, resp: string) {
-		const tempScore = parseInt(temp);
-		const heartScore = parseInt(heart);
-		const respScore = parseInt(resp);
+		const tempScore = parseFloat(temp.replace(",", ".") || "0");
+		const heartScore = parseFloat(heart.replace(",", ".") || "0");
+		const respScore = parseFloat(resp.replace(",", ".") || "0");
 		let tempMessage = "";
 		let heartMessage = "";
 		let respMessage = "";
@@ -37,11 +39,39 @@ function NEWSform() {
 		}
 	}
 
-	function submitForm(e: React.FormEvent<HTMLFormElement>) {
+	async function submitForm(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const check = checkIfValuesAreInRange(temp, heart, resp);
 		if (check === true) {
-			alert(`Score submitted`);
+			await fetch("http://localhost:3000/NEWSscore", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					measurements: [
+						{
+							type: "TEMP",
+							value: temp,
+						},
+						{
+							type: "HR",
+							value: heart,
+						},
+						{
+							type: "RR",
+							value: resp,
+						},
+					],
+				}),
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					setScore(data.score);
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
 		} else {
 			alert(check);
 		}
@@ -101,6 +131,7 @@ function NEWSform() {
 						required></input>
 				</div>
 			</form>
+
 			<div className="flex gap-x-6 mt-10">
 				<button
 					className="bg-[#7424DA] text-white font-bold py-2 px-4 rounded-full"
@@ -114,6 +145,15 @@ function NEWSform() {
 					Reset
 				</button>
 			</div>
+
+			{score && (
+				<div className="mt-10 flex w-[404px]">
+					<div className="border-1 w-full flex border-[#7424DA] border-opacity-40 bg-[#FAF6FF] rounded-lg p-4">
+						<p className="mr-2">News score:</p>
+						<p className="font-bold">{score}</p>
+					</div>
+				</div>
+			)}
 		</>
 	);
 }
