@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FormInput } from "./FormInput";
+import { checkIfValuesAreInRange } from "../utilities";
 
 function NEWSform() {
 	const [temp, setTemp] = useState("");
@@ -11,32 +13,6 @@ function NEWSform() {
 		setHeart("");
 		setResp("");
 		setScore("");
-	}
-
-	function checkIfValuesAreInRange(temp: string, heart: string, resp: string) {
-		const tempScore = parseFloat(temp.replace(",", "."));
-		const heartScore = parseFloat(heart.replace(",", "."));
-		const respScore = parseFloat(resp.replace(",", "."));
-		let tempMessage = "";
-		let heartMessage = "";
-		let respMessage = "";
-		if (tempScore < 31 || tempScore > 42) {
-			tempMessage =
-				"Temp is out of the valid range, please enter a value between 31 and 42";
-		}
-		if (heartScore < 25 || heartScore > 220) {
-			heartMessage =
-				"Heart rate is out of the valid range, please enter a value between 25 and 220";
-		}
-		if (respScore < 3 || respScore > 60) {
-			respMessage =
-				"Respiratory rate is out of the valid range, please enter a value between 3 and 60";
-		}
-		if (tempMessage || heartMessage || respMessage) {
-			return tempMessage + " " + heartMessage + " " + respMessage;
-		} else {
-			return true;
-		}
 	}
 
 	async function submitForm(e: React.FormEvent<HTMLFormElement>) {
@@ -82,54 +58,30 @@ function NEWSform() {
 				onSubmit={submitForm}
 				id="NEWSForm"
 				className="flex flex-col gap-y-3 w-[404px]">
-				<div className="flex flex-col">
-					<p className="font-bold text-base mb-2">Body temperature</p>
-					<label
-						className="text-sm"
-						htmlFor="temp">
-						Degrees celcius
-					</label>
-					<input
-						className="py-[10px] pl-6 pr-3 border border-[#7424DA] border-opacity-5 bg-[#FAF6FF]"
-						type="text"
-						id="temp"
-						name="temp"
-						value={temp}
-						onChange={(e) => setTemp(e.target.value)}
-						required></input>
-				</div>
-				<div className="flex flex-col">
-					<p className="font-bold text-base mb-2">Heart rate</p>
-					<label
-						className="text-sm"
-						htmlFor="heart">
-						Beats per minute
-					</label>
-					<input
-						className="py-[10px] pl-6 pr-3 border border-[#7424DA] border-opacity-5 bg-[#FAF6FF]"
-						type="text"
-						id="heart"
-						name="heart"
-						value={heart}
-						onChange={(e) => setHeart(e.target.value)}
-						required></input>
-				</div>
-				<div className="flex flex-col">
-					<p className="font-bold text-base mb-2">Respiratory Rate</p>
-					<label
-						className="text-sm"
-						htmlFor="resp">
-						Breaths per minute
-					</label>
-					<input
-						className="py-[10px] pl-6 pr-3 border border-[#7424DA] border-opacity-5 bg-[#FAF6FF]"
-						type="text"
-						id="resp"
-						name="resp"
-						value={resp}
-						onChange={(e) => setResp(e.target.value)}
-						required></input>
-				</div>
+				<FormInput
+					label="Body temperature"
+					name="temp"
+					sublabel="Degrees celcius"
+					type="text"
+					value={temp}
+					onChange={(e) => setTemp(e.target.value)}
+				/>
+				<FormInput
+					label="Heart rate"
+					name="heart"
+					sublabel="Beats per minute"
+					type="text"
+					value={heart}
+					onChange={(e) => setHeart(e.target.value)}
+				/>
+				<FormInput
+					label="Respiratory Rate"
+					name="resp"
+					sublabel="Breaths per minute"
+					type="text"
+					value={resp}
+					onChange={(e) => setResp(e.target.value)}
+				/>
 			</form>
 
 			<div className="flex gap-x-6 mt-10">
